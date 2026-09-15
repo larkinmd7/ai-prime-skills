@@ -1,0 +1,27 @@
+# ═══ Секреты — никогда не в репозиторий ═══
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+*_rsa
+*_ed25519
+
+# ═══ Зависимости ═══
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# ═══ Сборка ═══
+dist/
+build/
+*.log
+
+# ═══ Система ═══
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
