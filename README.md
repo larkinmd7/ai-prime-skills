@@ -36,11 +36,11 @@ git clone https://github.com/ВАШ-АККАУНТ/ai-prime-skills.git
 
 ```
 ваш-проект/
-├── .claude/skills/        ← сюда три папки
+├── .claude/skills/        ← сами файлы
 │   ├── docker-package/
 │   ├── github-publish/
 │   └── timeweb-deploy/
-├── .agents/skills         ← симлинк на .claude/skills (для Codex)
+├── .agents/skills → ../.claude/skills
 └── .env                   ← ваши ключи
 ```
 
@@ -48,16 +48,20 @@ git clone https://github.com/ВАШ-АККАУНТ/ai-prime-skills.git
 
 ```
 Скачай репозиторий https://github.com/larkinmd7/ai-prime-skills
-в текущую папку и положи папки docker-package, github-publish
-и timeweb-deploy в .claude/skills/ этого проекта.
-Если я работаю в Codex — сделай ещё симлинк .agents/skills
-на .claude/skills, чтобы Codex их тоже видел.
+в текущую папку. Положи папки docker-package, github-publish
+и timeweb-deploy в .claude/skills/ этого проекта
+и сделай симлинк .agents/skills на .claude/skills.
 Скиллы должны быть проектными, не глобальными.
-Потом покажи, что они появились в списке доступных скиллов.
+Потом покажи дерево папки и список доступных скиллов.
 ```
 
-> Claude Code читает `.claude/skills/` сам. Codex ищет в `.agents/skills` —
-> симлинк решает это одной командой, дублировать файлы не нужно.
+**Почему две папки, а файлы одни.** Claude Code читает только
+`.claude/skills/`, Codex — только `.agents/skills`. Ни один не умеет читать
+чужой путь. Симлинк даёт обоим одну и ту же папку: правите скилл один раз,
+видят оба. Копировать файлы дважды не нужно.
+
+Делается один раз при установке, независимо от того, каким агентом
+вы пользуетесь.
 
 ### 3. Положить свои ключи
 
