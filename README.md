@@ -54,7 +54,7 @@ git clone https://github.com/ВАШ-АККАУНТ/ai-prime-skills.git
 cp .env.example .env
 ```
 
-Где брать ключи — написано внутри `.env.example`.
+Где брать ключи — написано внутри `.env.example`, подробнее — в [WALKTHROUGH.md](WALKTHROUGH.md).
 
 ⚠️ **Файл `.env` никогда не попадает в интернет.** Он уже внесён
 в `.gitignore`. Не присылайте его никому и не выкладывайте в репозиторий.
