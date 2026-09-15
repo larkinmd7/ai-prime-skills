@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 import time
 import urllib.error
@@ -133,6 +134,41 @@ def find_tld(zone: str) -> dict | None:
     return None
 
 
+def ensure_ssh_key() -> int:
+    """Гарантируем, что у аккаунта есть SSH-ключ и он лежит у нас на компьютере.
+
+    Без ключа сервер создаётся, но зайти на него нельзя — а деплою нужен вход.
+    """
+    local = Path.home() / ".ssh" / "id_ed25519_timeweb"
+    pub = local.with_suffix(".pub")
+
+    if not pub.exists():
+        local.parent.mkdir(mode=0o700, exist_ok=True)
+        log("Создаю ключ доступа к серверам (это как ключ от квартиры)…")
+        subprocess.run(
+            ["ssh-keygen", "-t", "ed25519", "-f", str(local), "-N", "", "-q",
+             "-C", "ai-prime"],
+            check=True,
+        )
+        log(f"Ключ создан: {local}")
+
+    body = pub.read_text(encoding="utf-8").strip()
+
+    # уже загружен на Timeweb?
+    for k in call("/ssh-keys").get("ssh_keys", []):
+        if k.get("name") == "ai-prime":
+            return k["id"]
+
+    created = call("/ssh-keys", "POST", {
+        "name": "ai-prime",
+        "body": body,
+        "is_default": True,
+    })
+    key_id = created.get("ssh_key", {}).get("id")
+    log("Ключ загружен в Timeweb.")
+    return key_id
+
+
 # ─────────────────────────── команды ───────────────────────────
 
 
@@ -204,11 +240,14 @@ def cmd_server_create(args) -> None:
         log("Отменено, ничего не создано.")
         return
 
+    ssh_key_id = ensure_ssh_key()
+
     result = call("/servers", "POST", {
         "name": args.name,
         "preset_id": preset["id"],
         "os_id": os_id,
         "is_ddos_guard": False,
+        "ssh_keys_ids": [ssh_key_id] if ssh_key_id else [],
     })
     server = result.get("server", {})
     sid = server.get("id")
@@ -219,7 +258,10 @@ def cmd_server_create(args) -> None:
         s = call(f"/servers/{sid}").get("server", {})
         if s.get("status") == "on":
             ips = [ip.get("ip") for n in s.get("networks", []) for ip in n.get("ips", [])]
+            ip = next((str(i) for i in ips if ":" not in str(i)), None)
             log(f"Готово. IP: {', '.join(str(i) for i in ips)}")
+            if ip:
+                log(f"Вход на сервер: ssh -i ~/.ssh/id_ed25519_timeweb root@{ip}")
             return
     log("Сервер создан, но ещё запускается. Проверьте: python3 twc.py servers")
 
