@@ -14,7 +14,6 @@
 | **`skills/docker-package`** | пакует приложение вместе с окружением, чтобы работало везде одинаково |
 | **`skills/github-publish`** | создаёт репозиторий и хранит историю изменений |
 | **`skills/timeweb-deploy`** | арендует сервер, покупает домен, публикует продукт в интернете |
-| **`AGENTS.md` / `CLAUDE.md`** | правила проекта: как агент себя ведёт, что спрашивает перед тратой денег, как бережёт ключи |
 
 Идут по порядку: упаковали → сохранили → опубликовали.
 
@@ -48,8 +47,6 @@ git clone https://github.com/ВАШ-АККАУНТ/ai-prime-skills.git
 │   ├── docker-package/
 │   ├── github-publish/
 │   └── timeweb-deploy/
-├── AGENTS.md              ← правила проекта
-├── CLAUDE.md              ← то же для Claude Code
 └── .env                   ← ваши ключи
 ```
 
@@ -60,7 +57,6 @@ git clone https://github.com/ВАШ-АККАУНТ/ai-prime-skills.git
 и положи три папки из его skills/ в мой проект:
 в .claude/skills/, если мы в Claude Code,
 или в .agents/skills/, если мы в Codex.
-Файлы AGENTS.md, CLAUDE.md и .env.example — в корень проекта.
 Скачанный репозиторий удали, он больше не нужен.
 Покажи дерево — лишних папок остаться не должно.
 ```
